@@ -1,0 +1,43 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+body {
+    margin: 0;
+}
+
+body {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    background-color: #1f1e1e;
+    color: #fff;
+}
+
+a {
+    text-decoration: none;
+}
+
+input,
+textarea,
+button {
+    background: none;
+    border: none;
+}
+
+li {
+    list-style: none;
+}
+
+@media (hover: none), (hover: on-demand) {
+    :hover {
+        
+    }
+}
