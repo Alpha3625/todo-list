@@ -1,200 +1,137 @@
-import { useState } from 'react';
-import { SvgSelector } from './assets/SVGSelector';
-
-interface IToDo {
-    title: string;
-    description: string;
-    isCompleted: boolean;
-}
-
-interface ICompletedToDo extends IToDo {
-    date: string;
-}
+import {useEffect, useState} from 'react';
+import {TodoTabs} from './components/TodoTabs/TodoTabs';
+import {TodoPanel} from './components/TodoPanel/TodoPanel';
+import {IToDo} from './interface/IToDo';
+import {ICompletedToDo} from './interface/ICompletedToDo';
+import {TodoList} from './components/TodoList/TodoList';
+import {TodoCompletedList} from './components/TodoList/CompletedTodoList';
 
 function App() {
-    const [inputTitle, setInputTitle] = useState<string>('Doing Workout');
-    const [inputDescription, setInputDescription] = useState<string>('I have to do push up at 6 PM');
-    const [todos, setTodos] = useState<IToDo[]>([]);
-    const [completedTodos, setCompletedTodos] = useState<ICompletedToDo[]>([]);
-    const [isCompletedScreen, setIsCompletedScreen] = useState<boolean>(false);
-    const [currentEdit, setCurrentEdit] = useState<string | number>("");
-    const [currentEditedItem, setCurrentEditedItem] = useState<IToDo[]>([]);
+    const [inputTitle, setInputTitle] = useState < string > ('');
+    const [inputDescription, setInputDescription] = useState < string > ('');
+    const [todoList, setTodoList] = useState < IToDo[] > ([]);
+    const [completedTodoList, setCompletedTodoList] = useState < ICompletedToDo[] > ([]);
+    const [isCompletedScreen, setIsCompletedScreen] = useState < boolean > (false);
+    const [currentEdit, setCurrentEdit] = useState < number | null > (null);
+    const [currentEditedItem, setCurrentEditedItem] = useState < IToDo | null > (null);
 
-    const handleEdit = (item: IToDo, ind: number) => {
-        setCurrentEdit(ind);
-        setCurrentEditedItem(item);
-    };
+    useEffect(() => {
+        const savedTodo = JSON.parse(localStorage.getItem('todolist') || '[]');
+        const savedCompletedTodo = JSON.parse(localStorage.getItem('completedTodoList') || '[]');
+        setTodoList(savedTodo);
+        setCompletedTodoList(savedCompletedTodo);
+    }, []);
 
-    const handleUpdateTitle = (value: string) => {
-        setCurrentEditedItem((prev) => {
-            return {...prev, title: value};
-        });
-    };
-
-    const handleUpdateDescription = (value: string) => {
-        setCurrentEditedItem((prev) => {
-            return {...prev, description: value};
-        });
-    };
-
-    const handleUpdateToDo = () => {
-        const newToDo = [...todos];
-        newToDo[currentEdit] = currentEditedItem;
-        setTodos(newToDo);
-        setCurrentEdit('');
-    };
-
-    const add = () => {
+    const handleAddTodo = () => {
         if (inputTitle || inputDescription) {
-            const newTodo: IToDo = {
+            const newTodo : IToDo = {
                 title: inputTitle,
                 description: inputDescription,
-                isCompleted: false
+                descriptionLength: false
+            };
+            if (inputDescription.length > 200) {
+                newTodo.descriptionLength = true;
             }
-            if (inputDescription.length > 50) {
-                newTodo.isCompleted = true;
-            }
-            setTodos([...todos, newTodo]);
+            const updatedTodoArr = [...todoList, newTodo];
+            setTodoList(updatedTodoArr);
+            localStorage.setItem('todolist', JSON.stringify(updatedTodoArr));
             setInputTitle('');
             setInputDescription('');
         }
     };
 
-    const deleteToDo = (i: number) => {
-        const reducedList = todos.filter((_, index) => index !== i);
-        setTodos(reducedList);
+    const handleDeleteTodo = (i : number) => {
+        const reducedList = todoList.filter((_, index) => index !== i);
+        localStorage.setItem('todolist', JSON.stringify(reducedList));
+        setTodoList(reducedList);
     };
 
-    const getCurrentDateTime = (): string => {
+    const getCurrentDateTime = () : string => {
         const now = new Date();
-        const padZero = (num: number) => (num < 10 ? '0' + num : num);
-
         const dd = now.getDate();
         const mm = now.getMonth() + 1;
         const yyyy = now.getFullYear();
         const h = now.getHours();
         const m = now.getMinutes();
         const s = now.getSeconds();
+        const padZero = (num : number) => (num < 10 ? '0' + num : num);
 
         return `Completed ${padZero(dd)}-${padZero(mm)}-${padZero(yyyy)} at ${padZero(h)}:${padZero(m)}:${padZero(s)}`;
     }
 
-    const completed = (item: IToDo, index: number) => {
-        const completedItem: ICompletedToDo = {
-            ...item,
-            date: getCurrentDateTime()
-        };
-
-        setCompletedTodos([...completedTodos, completedItem]);
-        deleteToDo(index);
+    const handleCompletedTodo = (item : IToDo, index : number) => {
+        const completedItem : ICompletedToDo = {...item, date: getCurrentDateTime()};
+        const updatedCompletedArr = [...completedTodoList, completedItem];
+        setCompletedTodoList(updatedCompletedArr);
+        handleDeleteTodo(index);
+        localStorage.setItem('completedTodoList', JSON.stringify(updatedCompletedArr));
     };
 
-    const deleteCompletedToDo = (i: number) => {
-        const reducedList = completedTodos.filter((_, index) => index !== i);
-        setCompletedTodos(reducedList);
+    const handleDeleteCompletedTodo = (i : number) => {
+        const reducedList = completedTodoList.filter((_, index) => index !== i);
+        localStorage.setItem("completedTodoList", JSON.stringify(reducedList));
+        setCompletedTodoList(reducedList);
+    };
+
+    const handleEditTodo = (item : IToDo, ind : number) => {
+        setCurrentEdit(ind);
+        setCurrentEditedItem(item);
+    };
+
+    const handleUpdateTitle = (value : string) => {
+        if (currentEditedItem) {
+            setCurrentEditedItem((prev) => ({...prev !, title: value}));
+        }
+    };
+
+    const handleUpdateDescription = (value : string) => {
+        if (currentEditedItem) {
+            setCurrentEditedItem((prev) => ({...prev !, description: value}));
+        }
+    };
+
+    const handleUpdateTodo = () => {
+        if (currentEdit !== null && currentEditedItem) {
+            const newToDo = [...todoList];
+            newToDo[currentEdit] = currentEditedItem;
+            setTodoList(newToDo);
+            localStorage.setItem('todolist', JSON.stringify(newToDo));
+            setCurrentEdit(null);
+            setCurrentEditedItem(null);
+        }
     };
 
     return (
-        <div className="container">
-            <h1 className="home__title">Todo List</h1>
-            <div className="todo">
-                <div className="todo__inputs">
-                    <label className="todo__input">
-                        <span>Title:</span>
-                        <input
-                            type="text"
-                            placeholder="What's the title of your To Do?"
-                            value={inputTitle}
-                            onChange={(e) => setInputTitle(e.target.value)} />
-                    </label>
+        <div className="main">
+            <div className="container">
+                <h1 className="main__title">Todo List</h1>
+                <div className="todo">
+                    <TodoPanel
+                        inputTitle={inputTitle}
+                        setInputTitle={setInputTitle}
+                        inputDescription={inputDescription}
+                        setInputDescription={setInputDescription}
+                        addTodo={handleAddTodo}/>
 
-                    <label className="todo__input">
-                        <span>Description:</span>
-                        <input
-                            type="text"
-                            placeholder="What's the description of your To Do?"
-                            value={inputDescription}
-                            onChange={(e) => setInputDescription(e.target.value)} />
-                    </label>
+                    <TodoTabs
+                        isCompletedScreen={isCompletedScreen}
+                        setIsCompletedScreen={setIsCompletedScreen}/>
 
-                    <button className="todo__addButton" onClick={add}>Add</button>
-                </div>
-                <div className="todo__tabs">
-                    <button
-                        className={!isCompletedScreen ? "todo__tabs>button:first-child active" : "todo__tabs>button:first-child"}
-                        onClick={() => setIsCompletedScreen(false)}>To Do</button>
+                    {!isCompletedScreen
+                        ? <TodoList
+                                todoList={todoList}
+                                deleteTodo={handleDeleteTodo}
+                                editTodo={handleEditTodo}
+                                completedTodo={handleCompletedTodo}
+                                updateTitle={handleUpdateTitle}
+                                updateDescription={handleUpdateDescription}
+                                updateTodo={handleUpdateTodo}
+                                currentEdit={currentEdit}
+                                currentEditedItem={currentEditedItem}/>
 
-                    <button
-                        className={isCompletedScreen ? "todo__tabs>button:last-child active" : "todo__tabs>button:last-child"}
-                        onClick={() => setIsCompletedScreen(true)}>Completed</button>
-                </div>
-                <div className="todo__list">
-                    {
-                        // todos.length === 0 ? <p className="todo__listPlaceholder">The list is empty</p> :
-                        !isCompletedScreen ? todos.map((item, index) => {
-                            if (currentEdit === index) {
-                                return (
-                                    <div className="edit__wrapper" key={index}>
-                                        <input
-                                            placeholder="Updated Title"
-                                            onChange={(e) => handleUpdateTitle(e.target.value)}
-                                            value={currentEditedItem.title} />
-                                        
-                                        <textarea
-                                            placeholder="Updated Description"
-                                            rows={4}
-                                            onChange={(e) => handleUpdateDescription(e.target.value)}
-                                            value={currentEditedItem.description} />
-
-                                        <button
-                                            className="todo__addButton"
-                                            onClick={handleUpdateToDo}>Update</button>
-                                    </div>
-                                )
-                            } else {
-                            return (
-                                <div className="todo__listItem" key={index}>
-                                <div className="todo__listItem-content">
-                                    <h3>{item.title}</h3>
-                                    <p className={`${(item.isCompleted === true) ? "card__text active" : "card__text"}`}>
-                                        {item.description}
-                                    </p>
-                                </div>
-                                <div className="todo__listItem-buttons">
-                                    <button onClick={() => deleteToDo(index)} title="Delete?">
-                                        <SvgSelector id="trash" />
-                                    </button>
-
-                                    <button onClick={() => handleEdit(item, index)} title="Edit?">
-                                        <SvgSelector id="pencil" />
-                                    </button>
-
-                                    <button onClick={() => completed(item, index)} title="Complete?">
-                                        <SvgSelector id="check-mark" />
-                                    </button>
-                                </div>
-                            </div>
-                            )}
-                        }) :
-                        completedTodos.map((item, index) => {
-                            return (
-                                <div className="todo__listItem" key={index}>
-                                <div className="todo__listItem-content">
-                                    <h3>{item.title}</h3>
-                                    <p className={`${(item.isCompleted === true) ? "card__text active" : "card__text"}`}>
-                                        {item.description}
-                                    </p>
-                                    <p className="currentCompleteDate">{item.date}</p>
-                                </div>
-                                <div className="todo__listItem-buttons">
-                                    <button onClick={() => deleteCompletedToDo(index)} title="Complete?">
-                                        <SvgSelector id="trash" />
-                                    </button>
-                                </div>
-                            </div>
-                            )
-                        }
-                        )
+                        : <TodoCompletedList
+                            completedTodoList={completedTodoList}
+                            deleteCompletedTodo={handleDeleteCompletedTodo}/>
                     }
                 </div>
             </div>

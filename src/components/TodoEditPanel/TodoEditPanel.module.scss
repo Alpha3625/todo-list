@@ -1,0 +1,50 @@
+.todo-edit-panel {
+    background-color: #414040;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+
+    &>input,
+    &>textarea {
+        background-color: #fff;
+        border: 1px solid lightgray;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 3px;
+
+        &:focus {
+            outline: 2px solid rgb(0, 230, 122);
+        }
+    }
+
+    &>button {
+        background-color: rgb(0, 230, 122);
+        font-weight: 900;
+        color: white;
+        padding: 10px;
+        width: 200px;
+        height: 40px;
+        margin: 10px auto 0;
+        cursor: pointer;
+
+        &:hover {
+            background-color: rgb(4, 196, 106);
+        }
+
+        @media screen and (max-width: 700px) {
+            width: 100px;
+        }
+
+        @media screen and (max-width: 500px) {
+            width: 100%;
+        }
+    }
+}
+
+// .edit__wrapper .primaryBtn {
+//     margin-left: auto;
+//     margin-right: auto;
+//     padding: 10px;
+//     font-size: 16px;
+//     width: fit-content;
+// }

@@ -32,12 +32,7 @@ button {
     border: none;
 }
 
-li {
-    list-style: none;
-}
-
-@media (hover: none), (hover: on-demand) {
-    :hover {
-        
-    }
+ul, ol {
+    margin: 0;
+    padding: 0;
 }
