@@ -16,6 +16,7 @@ export const TodoCompletedList : FC < ITodoCompletedListProps > = ({completedTod
                     return (
                         <TodoCompletedItem
                             item={item}
+                            key={index}
                             index={index}
                             handleDelete={() => deleteCompletedTodo(index)} />
                     );

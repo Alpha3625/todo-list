@@ -44,6 +44,7 @@ export const TodoList: FC<ITodoListProps> = ({
                             <TodoItem
                                 item={item}
                                 index={index}
+                                key={index}
                                 handleDelete={deleteTodo}
                                 handleEdit={editTodo}
                                 handleCompleted={completedTodo}/>
