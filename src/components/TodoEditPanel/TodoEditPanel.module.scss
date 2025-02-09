@@ -3,6 +3,7 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
 
     &>input,
     &>textarea {
@@ -17,34 +18,37 @@
         }
     }
 
-    &>button {
-        background-color: rgb(0, 230, 122);
-        font-weight: 900;
-        color: white;
-        padding: 10px;
-        width: 200px;
-        height: 40px;
-        margin: 10px auto 0;
-        cursor: pointer;
+    &__buttons {
+        display: flex;
+        
+        &>button {
+            background-color: rgb(0, 230, 122);
+            font-weight: 900;
+            color: white;
+            padding: 10px;
+            width: 200px;
+            height: 40px;
+            margin: 10px auto 0;
+            cursor: pointer;
 
-        &:hover {
-            background-color: rgb(4, 196, 106);
-        }
+            &:hover {
+                background-color: rgb(4, 196, 106);
+            }
 
-        @media screen and (max-width: 700px) {
-            width: 100px;
-        }
+            &:last-child {
+                background-color: #ff0000;
+                &:hover {
+                    background-color: #cd0101;
+                }
+            }
 
-        @media screen and (max-width: 500px) {
-            width: 100%;
+            @media screen and (max-width: 700px) {
+                width: 100px;
+            }
+
+            @media screen and (max-width: 500px) {
+                width: 100%;
+            }
         }
     }
 }
-
-// .edit__wrapper .primaryBtn {
-//     margin-left: auto;
-//     margin-right: auto;
-//     padding: 10px;
-//     font-size: 16px;
-//     width: fit-content;
-// }

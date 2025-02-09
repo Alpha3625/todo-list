@@ -1,20 +1,19 @@
 .todo-tabs {
-    margin-bottom: 15px;
-
-    @media screen and (max-width: 500px) {
-        text-align: center;
-    }
-
     &>button {
         background-color: rgb(71, 71, 71);
         font-weight: 900;
         color: white;
+        text-transform: capitalize;
         padding: 10px;
         width: 100px;
         cursor: pointer;
 
-        &.active {
+        &:active {
             background-color: rgb(0, 230, 122);
+        }
+
+        &.active {
+            // background-color: rgb(0, 230, 122);
         }
     }
 }

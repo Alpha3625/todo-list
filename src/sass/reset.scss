@@ -19,6 +19,9 @@ body {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     background-color: #1f1e1e;
     color: #fff;
+    @media screen and (max-width: 1000px) {
+        background-color: #353434;
+    }
 }
 
 a {
@@ -33,6 +36,7 @@ button {
 }
 
 ul, ol {
+    list-style: none;
     margin: 0;
     padding: 0;
 }

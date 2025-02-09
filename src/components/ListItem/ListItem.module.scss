@@ -1,4 +1,4 @@
-.todo-item {
+.list-item {
     background-color: #414040;
     display: flex;
     justify-content: space-between;
@@ -10,6 +10,11 @@
         margin-bottom: 10px;
     }
 
+    // .delete {
+    //     transition: transform 500ms linear;
+    //     transform: translateX(1000%);
+    // }
+
     @media screen and (max-width: 550px) {
         padding: 10px;
     }
@@ -20,7 +25,7 @@
     }
 }
 
-.todo-item__content {
+.list-item__content {
     width: 100%;
     margin-right: 30px;
 
@@ -29,11 +34,10 @@
     }
 }
 
-.todo-item__title {
+.list-item__title {
     font-size: 25px;
     color: rgb(0, 230, 122);
     font-weight: bold;
-    margin-bottom: 10px;
 
     @media screen and (max-width: 500px) {
         font-size: 18px;
@@ -44,10 +48,11 @@
     }
 }
 
-.todo-item__text {
+.list-item__text {
     max-width: 500px;
     font-size: 14px;
     color: rgb(161, 161, 161);
+    margin-top: 10px;
     overflow-y: scroll;
 
     &.active {
@@ -55,13 +60,13 @@
     }
 }
 
-.todo-item__date {
+.list-item__date {
     color: #fff;
     font-size: 14px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
-.todo-item__buttons {
+.list-item__buttons {
     display: flex;
     gap: 15px;
 

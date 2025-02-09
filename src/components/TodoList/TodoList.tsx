@@ -1,56 +1,65 @@
 import {FC} from 'react';
-import {TodoItem} from '../TodoListItems/TodoItem';
-import {IToDo} from '../../interface/interface';
 import {TodoEditPanel} from '../TodoEditPanel/TodoEditPanel';
 import styles from './TodoList.module.scss';
+import { ListItem } from '../ListItem/ListItem';
+import { IToDo } from '../../interface/IToDo';
 
 interface ITodoListProps {
-    todoList: IToDo[];
-    deleteTodo: (index: number) => void;
+    filteredList: () => IToDo[];
+    deleteTodo: (id: string) => void;
     editTodo: (item: IToDo, index: number) => void;
-    completedTodo: (item: IToDo, index: number) => void;
+    completedTodo: (index: number) => void;
     updateTitle: (value: string) => void;
     updateDescription: (value: string) => void;
     updateTodo: () => void;
+    cancelUpdateTodo: (value: boolean) => void;
     currentEdit: number | null;
     currentEditedItem: IToDo | null;
 }
 
 export const TodoList: FC<ITodoListProps> = ({
-    todoList,
+    filteredList,
     deleteTodo,
     editTodo,
     completedTodo,
     updateTitle,
     updateDescription,
     updateTodo,
+    cancelUpdateTodo,
     currentEdit,
     currentEditedItem
 }) => {
     return (
         <ul className={styles["todo-list"]}>
             {
-                todoList.map((item, index) => {
-                    if (currentEdit === index) {
-                        return (
-                            <TodoEditPanel
-                                handleUpdateTitle={updateTitle}
-                                handleUpdateDescription={updateDescription}
-                                handleUpdateTodo={updateTodo}
-                                currentEditedItem={currentEditedItem} />
-                        );
-                    } else {
-                        return (
-                            <TodoItem
-                                item={item}
-                                index={index}
-                                key={index}
-                                handleDelete={deleteTodo}
-                                handleEdit={editTodo}
-                                handleCompleted={completedTodo}/>
-                        );
-                    }
-                })
+                filteredList().length === 0 ? (
+                    <li className={styles["todo-list__alt"]}>
+                        The list is empty
+                    </li>
+                ) : (
+                    filteredList().map((item, index) => {
+                        if (currentEdit === index) {
+                            return (
+                                <TodoEditPanel
+                                    handleUpdateTitle={updateTitle}
+                                    handleUpdateDescription={updateDescription}
+                                    handleUpdateTodo={updateTodo}
+                                    cancelUpdate={cancelUpdateTodo}
+                                    currentEditedItem={currentEditedItem} currentEdit={null} />
+                            );
+                        } else {
+                            return (
+                                <ListItem
+                                    item={item}
+                                    index={index}
+                                    key={index}
+                                    handleDelete={deleteTodo}
+                                    handleEdit={editTodo}
+                                    handleCompleted={completedTodo}/>
+                            );
+                        }
+                    })
+                )
             }
         </ul>
     );
