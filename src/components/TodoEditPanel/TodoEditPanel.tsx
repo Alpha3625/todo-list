@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import styles from './TodoEditPanel.module.scss';
 import { IToDo } from '../../interface/IToDo';
 
